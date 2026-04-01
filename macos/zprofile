@@ -1,0 +1,8 @@
+# Homebrew (macOS only)
+if [[ -f /opt/homebrew/bin/brew ]]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
+# Created by `pipx` on 2025-01-17 13:44:33
+# Local bin (use $HOME for portability)
+export PATH="$PATH:$HOME/.local/bin"

@@ -1,0 +1,7 @@
+# Linuxbrew (if installed)
+if [[ -d /home/linuxbrew/.linuxbrew ]]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
+
+# Local bin (use $HOME for portability)
+export PATH="$PATH:$HOME/.local/bin"

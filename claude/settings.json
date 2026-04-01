@@ -1,0 +1,190 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1",
+    "ENABLE_LSP_TOOL": "1"
+  },
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(make *)",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git branch *)",
+      "Read",
+      "Write",
+      "Edit",
+      "MultiEdit",
+      "Glob",
+      "Grep"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(curl * | bash)",
+      "Bash(wget * | bash)",
+      "Read(.env)",
+      "Read(.env.*)",
+      "Read(**/.env)",
+      "Read(**/.env.*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run ~/.claude/scripts/log-hook.py pre"
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run ~/.claude/hooks/pre_tool_use.py"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run ~/.claude/scripts/log-hook.py post"
+          }
+        ]
+      },
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run ~/.claude/hooks/post_tool_use.py"
+          }
+        ]
+      },
+      {
+        "matcher": "Task",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay /System/Library/Sounds/Glass.aiff 2>/dev/null || true"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run ~/.claude/scripts/log-hook.py stop"
+          },
+          {
+            "type": "command",
+            "command": "uv run ~/.claude/hooks/stop.py --chat"
+          },
+          {
+            "type": "command",
+            "command": "afplay /System/Library/Sounds/Purr.aiff 2>/dev/null || true"
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run ~/.claude/hooks/session_start.py --load-context"
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run ~/.claude/hooks/pre_compact.py --backup"
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run ~/.claude/hooks/subagent_stop.py --chat"
+          },
+          {
+            "type": "command",
+            "command": "uv run ~/.claude/hooks/agent_task_complete.py --log"
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run ~/.claude/hooks/notification.py --notify"
+          },
+          {
+            "type": "command",
+            "command": "uv run ~/.claude/hooks/waiting_for_input.py --enable"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "uv run ~/.claude/hooks/user_prompt_submit.py"
+          }
+        ]
+      }
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash -c 'input=$(cat); cwd=$(echo \"$input\" | jq -r \".workspace.current_dir\"); model=$(echo \"$input\" | jq -r \".model.display_name\"); output_style=$(echo \"$input\" | jq -r \".output_style.name\"); dir_name=$(basename \"$cwd\"); if git -C \"$cwd\" rev-parse --git-dir > /dev/null 2>&1; then branch=$(git -C \"$cwd\" -c core.fileMode=false branch --show-current 2>/dev/null || echo \"\"); if [[ -n \"$branch\" ]]; then if ! git -C \"$cwd\" -c core.fileMode=false diff --quiet 2>/dev/null; then git_status=\"*\"; else git_status=\"\"; fi; if ! git -C \"$cwd\" -c core.fileMode=false diff --cached --quiet 2>/dev/null; then git_status=\"${git_status}+\"; fi; git_info=\" on $(printf \"\\033[35m\")${branch}${git_status}$(printf \"\\033[0m\")\"; else git_info=\"\"; fi; else git_info=\"\"; fi; printf \"$(printf \"\\033[36m\")$(whoami)$(printf \"\\033[0m\") in $(printf \"\\033[34m\")${dir_name}$(printf \"\\033[0m\")${git_info} using $(printf \"\\033[33m\")${model}$(printf \"\\033[0m\")\"; if [[ \"$output_style\" != \"default\" ]] && [[ \"$output_style\" != \"null\" ]]; then printf \" $(printf \"\\033[2m\")(${output_style})$(printf \"\\033[0m\")\"; fi'"
+  },
+  "enabledPlugins": {
+    "clangd-lsp@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true,
+    "commit-commands@claude-plugins-official": true,
+    "hookify@claude-plugins-official": true,
+    "claude-code-setup@claude-plugins-official": true,
+    "plugin-dev@claude-plugins-official": true,
+    "gopls-lsp@claude-plugins-official": true
+  },
+  "alwaysThinkingEnabled": true,
+  "effortLevel": "high",
+  "showClearContextOnPlanAccept": true,
+  "skipDangerousModePermissionPrompt": true,
+  "preferredEditor": "",
+  "teammateMode": "tmux",
+  "servers": {},
+  "feedbackSurveyState": {
+    "lastShownTime": 1753952640664
+  }
+}

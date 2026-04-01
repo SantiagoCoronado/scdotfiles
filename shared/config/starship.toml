@@ -1,0 +1,83 @@
+command_timeout = 1000
+
+format = """[┌──](bright-black) $directory$git_branch$git_status$python$nodejs$rust$golang$docker_context$kubernetes
+[└─](bright-black)$jobs$cmd_duration$status$character"""
+
+[directory]
+format = "[$path]($style) "
+style = "bold green"
+truncation_length = 3
+truncation_symbol = "…/"
+
+[git_branch]
+format = "[on](bright-black) [$branch]($style) "
+style = "bold bright-green"
+
+[git_status]
+format = "[$all_status$ahead_behind]($style)"
+style = "bold yellow"
+ahead = "↑"
+behind = "↓"
+diverged = "⇅"
+modified = "!"
+staged = "+"
+untracked = "?"
+deleted = "✘"
+stashed = "≡"
+
+[python]
+format = "[via](bright-black) [$virtualenv]($style) "
+style = "bold blue"
+detect_extensions = []
+detect_files = []
+
+[nodejs]
+format = "[via](bright-black) [⬢ $version]($style) "
+style = "bold green"
+detect_extensions = []
+detect_files = ["package.json"]
+
+[rust]
+format = "[via](bright-black) [🦀 $version]($style) "
+style = "bold red"
+detect_extensions = []
+detect_files = ["Cargo.toml"]
+
+[golang]
+format = "[via](bright-black) [🐹 $version]($style) "
+style = "bold cyan"
+detect_extensions = []
+detect_files = ["go.mod"]
+
+[docker_context]
+format = "[via](bright-black) [🐳 $context]($style) "
+style = "bold blue"
+only_with_files = true
+
+[kubernetes]
+format = "[on](bright-black) [⎈ $context]($style) "
+style = "bold cyan"
+disabled = false
+detect_files = ["k8s", "kubernetes", "helm"]
+
+[jobs]
+format = "[$symbol$number]($style) "
+style = "bold bright-blue"
+symbol = "⚙ "
+number_threshold = 1
+
+[cmd_duration]
+format = "[took](bright-black) [$duration]($style) "
+style = "bold yellow"
+min_time = 500
+show_milliseconds = false
+
+[status]
+format = "[$symbol$status]($style) "
+style = "bold red"
+symbol = "✘ "
+disabled = false
+
+[character]
+success_symbol = "[🔥 ]()"
+error_symbol = "[🔥 ](bold red)"

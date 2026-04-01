@@ -1,0 +1,68 @@
+# OS files
+.DS_Store
+*.swp
+*.swo
+
+# Local overrides
+*.local
+
+# Secrets
+**/secrets/
+**/private/
+
+# Atuin database (contains command history)
+config/atuin/*.db
+config/atuin/*.db-*
+
+# Environment files
+.env
+.env.*
+**/.env
+**/.env.*
+
+# Neovim generated files
+config/nvim/plugin/
+config/nvim/lazy-lock.json
+
+# Karabiner generated files
+**/karabiner/assets/
+**/karabiner/automatic_backups/
+
+# btop generated files
+**/btop/themes/
+**/btop/*.log
+
+# thefuck generated files
+**/thefuck/__pycache__/
+**/thefuck/rules/
+
+# gh CLI auth (contains OAuth tokens)
+**/gh/hosts.yml
+
+# Claude Code runtime data
+claude/plugins/
+claude/sessions/
+claude/debug/
+claude/telemetry/
+claude/cache/
+claude/backups/
+claude/history.jsonl
+claude/todos/
+claude/shell-snapshots/
+claude/file-history/
+claude/paste-cache/
+claude/plans/
+claude/projects/
+claude/tasks/
+claude/teams/
+claude/statsig/
+claude/stats-cache.json
+claude/chrome/
+claude/ide/
+claude/downloads/
+claude/session-env/
+claude/logs/
+
+# Python
+__pycache__/
+*.pyc

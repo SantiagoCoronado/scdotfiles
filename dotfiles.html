@@ -1,0 +1,1000 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dotfiles — Multi-Platform Config Manager</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50:  '#ecfdf5',
+              100: '#d1fae5',
+              200: '#a7f3d0',
+              300: '#6ee7b7',
+              400: '#34d399',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
+              800: '#065f46',
+              900: '#064e3b',
+            }
+          },
+          fontFamily: {
+            mono: ['ui-monospace', 'SFMono-Regular', 'Menlo', 'Monaco', 'Consolas', 'monospace'],
+          },
+          animation: {
+            'fade-up': 'fadeUp 0.5s ease-out forwards',
+            'fade-in': 'fadeIn 0.4s ease-out forwards',
+          },
+          keyframes: {
+            fadeUp: {
+              '0%':   { opacity: '0', transform: 'translateY(20px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            },
+            fadeIn: {
+              '0%':   { opacity: '0' },
+              '100%': { opacity: '1' },
+            },
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    html { color-scheme: dark; }
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+    .accordion-body { display: none; }
+    .accordion-body.open { display: block; }
+    pre code { white-space: pre; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #10b981; border-radius: 3px; }
+    .toc-link.active { color: #34d399; border-left-color: #34d399; }
+    .flow-arrow::after { content: '↓'; display: block; text-align: center; color: #34d399; font-size: 1.25rem; margin: 4px 0; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-200 font-sans antialiased">
+
+  <!-- ── TOP NAV ── -->
+  <nav class="sticky top-0 z-50 bg-slate-950/90 backdrop-blur border-b border-slate-800">
+    <div class="max-w-7xl mx-auto px-4 flex items-center justify-between h-14">
+      <a href="#hero" class="font-mono text-brand-400 font-bold text-lg tracking-tight">~/dotfiles</a>
+      <div class="hidden md:flex items-center gap-6 text-sm text-slate-400">
+        <a href="#what"      class="hover:text-brand-400 transition-colors">What</a>
+        <a href="#purpose"   class="hover:text-brand-400 transition-colors">Purpose</a>
+        <a href="#how-full"  class="hover:text-brand-400 transition-colors">How It Works</a>
+        <a href="#by-part"   class="hover:text-brand-400 transition-colors">By Part</a>
+        <a href="#verdict"   class="hover:text-brand-400 transition-colors">Should You?</a>
+        <a href="#quickstart" class="hover:text-brand-400 transition-colors">Quick Start</a>
+      </div>
+      <span class="text-xs font-mono text-slate-500 hidden sm:block">macOS · Arch · WSL2</span>
+    </div>
+  </nav>
+
+  <div class="max-w-7xl mx-auto px-4 flex gap-8">
+
+    <!-- ── LEFT TOC SIDEBAR (desktop) ── -->
+    <aside class="hidden xl:block w-48 shrink-0 py-12">
+      <div class="sticky top-20 space-y-1 text-sm">
+        <p class="text-xs uppercase tracking-widest text-slate-600 mb-3 font-mono">On this page</p>
+        <a href="#hero"       class="toc-link block border-l-2 border-slate-700 pl-3 py-1 text-slate-500 hover:text-slate-300 transition-colors">Overview</a>
+        <a href="#what"       class="toc-link block border-l-2 border-slate-700 pl-3 py-1 text-slate-500 hover:text-slate-300 transition-colors">What is it?</a>
+        <a href="#purpose"    class="toc-link block border-l-2 border-slate-700 pl-3 py-1 text-slate-500 hover:text-slate-300 transition-colors">Purpose</a>
+        <a href="#how-full"   class="toc-link block border-l-2 border-slate-700 pl-3 py-1 text-slate-500 hover:text-slate-300 transition-colors">How it works</a>
+        <a href="#by-part"    class="toc-link block border-l-2 border-slate-700 pl-3 py-1 text-slate-500 hover:text-slate-300 transition-colors">By part</a>
+        <a href="#verdict"    class="toc-link block border-l-2 border-slate-700 pl-3 py-1 text-slate-500 hover:text-slate-300 transition-colors">Should you?</a>
+        <a href="#quickstart" class="toc-link block border-l-2 border-slate-700 pl-3 py-1 text-slate-500 hover:text-slate-300 transition-colors">Quick start</a>
+      </div>
+    </aside>
+
+    <!-- ── MAIN CONTENT ── -->
+    <main class="flex-1 min-w-0 py-12 space-y-24">
+
+      <!-- ═══ 1. HERO ═══ -->
+      <section id="hero">
+        <div class="reveal">
+          <div class="inline-flex items-center gap-2 text-xs font-mono bg-brand-900/40 text-brand-400 border border-brand-800 rounded-full px-3 py-1 mb-6">
+            <span class="w-1.5 h-1.5 rounded-full bg-brand-400 animate-pulse"></span>
+            Symlink-based dotfiles manager
+          </div>
+          <h1 class="text-5xl sm:text-6xl font-bold text-white mb-4 leading-tight">
+            ~/dot<span class="text-brand-400">files</span>
+          </h1>
+          <p class="text-xl text-slate-400 max-w-2xl mb-8">
+            A multi-platform configuration manager that keeps your development environment
+            consistent across <strong class="text-slate-200">macOS</strong>,
+            <strong class="text-slate-200">Arch Linux</strong>, and
+            <strong class="text-slate-200">WSL2</strong> — without ever copying a file.
+          </p>
+          <div class="flex flex-wrap gap-4 mb-12">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 text-center min-w-[100px]">
+              <div class="text-3xl font-bold text-brand-400">3</div>
+              <div class="text-xs text-slate-500 mt-1">Platforms</div>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 text-center min-w-[100px]">
+              <div class="text-3xl font-bold text-brand-400">40+</div>
+              <div class="text-xs text-slate-500 mt-1">Dev Tools</div>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 text-center min-w-[100px]">
+              <div class="text-3xl font-bold text-brand-400">25+</div>
+              <div class="text-xs text-slate-500 mt-1"> Plugins</div>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-4 text-center min-w-[100px]">
+              <div class="text-3xl font-bold text-brand-400">0</div>
+              <div class="text-xs text-slate-500 mt-1">Copies Made</div>
+            </div>
+          </div>
+
+          <!-- File tree preview -->
+          <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <div class="flex items-center gap-2 px-4 py-2.5 border-b border-slate-800 bg-slate-950">
+              <span class="w-3 h-3 rounded-full bg-red-500/70"></span>
+              <span class="w-3 h-3 rounded-full bg-amber-500/70"></span>
+              <span class="w-3 h-3 rounded-full bg-brand-500/70"></span>
+              <span class="ml-2 text-xs text-slate-500 font-mono">~/VSCodeProjects/dotfiles/</span>
+            </div>
+            <pre class="p-5 text-sm font-mono text-slate-300 overflow-x-auto leading-6"><code><span class="text-brand-400">dotfiles/</span>
+├── <span class="text-amber-400">install.sh</span>          <span class="text-slate-600"># Symlink configs (--macos / --linux)</span>
+├── <span class="text-amber-400">bootstrap-vps.sh</span>    <span class="text-slate-600"># Full Arch Linux VPS setup via SSH</span>
+├── <span class="text-amber-400">bootstrap-wsl.sh</span>    <span class="text-slate-600"># Full WSL2 Ubuntu/Debian setup</span>
+├── <span class="text-brand-400">macos/</span>              <span class="text-slate-600"># ghostty, git, karabiner, sketchybar, tmux, zsh</span>
+├── <span class="text-brand-400">linux/</span>              <span class="text-slate-600"># ghostty, git, tmux, zsh</span>
+├── <span class="text-brand-400">shared/</span>             <span class="text-slate-600"># , atuin, starship, btop, lazygit, wezterm…</span>
+└── <span class="text-brand-400">claude/</span>             <span class="text-slate-600"># Claude Code agents, skills, commands, hooks</span></code></pre>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ 2. WHAT IS IT ═══ -->
+      <section id="what">
+        <div class="reveal">
+          <h2 class="text-3xl font-bold text-white mb-2">What is it?</h2>
+          <div class="w-12 h-1 bg-brand-500 rounded mb-8"></div>
+
+          <p class="text-slate-400 text-lg mb-8 max-w-3xl">
+            A <strong class="text-slate-200">dotfiles repository</strong> is a git repo that stores all your
+            personal configuration files — shell settings, editor preferences, terminal themes, tool configs —
+            in one version-controlled place. This one adds automated bootstrap scripts so you can go from
+            a bare machine to a fully configured dev environment in minutes.
+          </p>
+
+          <!-- Symlink concept -->
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 mb-8">
+            <h3 class="text-brand-400 font-semibold text-sm font-mono uppercase tracking-wider mb-4">The Core Idea: Symlinks</h3>
+            <p class="text-slate-400 mb-5">
+              Instead of copying config files to where apps expect them, <code class="text-brand-300 bg-slate-800 px-1.5 py-0.5 rounded text-sm">install.sh</code> creates
+              symbolic links. The file lives in the git repo; the symlink makes the app think it's in the usual place.
+            </p>
+            <div class="bg-slate-950 rounded-lg p-5 font-mono text-sm overflow-x-auto">
+              <div class="text-slate-500 mb-1"># What actually exists on disk:</div>
+              <div class="text-slate-300">~/VSCodeProjects/dotfiles/shared/config//  <span class="text-brand-400">← real files, in git</span></div>
+              <br/>
+              <div class="text-slate-500 mb-1"># What Neovim sees:</div>
+              <div class="text-slate-300">~/.config/  <span class="text-amber-400">→</span>  ~/VSCodeProjects/dotfiles/shared/config//</div>
+              <br/>
+              <div class="text-slate-500 mb-1"># Edit from either path — same file:</div>
+              <div class="text-slate-300"><span class="text-brand-400"></span> ~/.config//init.lua   <span class="text-slate-600"># you're editing the git-tracked file</span></div>
+            </div>
+          </div>
+
+          <!-- Comparison table -->
+          <h3 class="text-white font-semibold mb-4">Symlinks vs. Copying</h3>
+          <div class="overflow-x-auto rounded-xl border border-slate-800">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="bg-slate-900 border-b border-slate-800">
+                  <th class="text-left px-4 py-3 text-slate-400 font-medium"></th>
+                  <th class="text-left px-4 py-3 text-brand-400 font-medium">Symlinks (this project)</th>
+                  <th class="text-left px-4 py-3 text-slate-500 font-medium">Manual copy/paste</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-800">
+                <tr class="bg-slate-950"><td class="px-4 py-3 text-slate-400">Edit a config</td><td class="px-4 py-3 text-slate-200">Instantly in git ✓</td><td class="px-4 py-3 text-slate-500">Must remember to copy back</td></tr>
+                <tr class="bg-slate-900"><td class="px-4 py-3 text-slate-400">Sync machines</td><td class="px-4 py-3 text-slate-200">git pull + ./install.sh ✓</td><td class="px-4 py-3 text-slate-500">Manual re-copy everywhere</td></tr>
+                <tr class="bg-slate-950"><td class="px-4 py-3 text-slate-400">Idempotency</td><td class="px-4 py-3 text-slate-200">Run install.sh twice, no damage ✓</td><td class="px-4 py-3 text-slate-500">Risk of overwriting</td></tr>
+                <tr class="bg-slate-900"><td class="px-4 py-3 text-slate-400">History</td><td class="px-4 py-3 text-slate-200">Full git log ✓</td><td class="px-4 py-3 text-slate-500">None</td></tr>
+                <tr class="bg-slate-950"><td class="px-4 py-3 text-slate-400">Complexity</td><td class="px-4 py-3 text-slate-200">One-time setup ✓</td><td class="px-4 py-3 text-slate-500">Simple but fragile</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ 3. PURPOSE ═══ -->
+      <section id="purpose">
+        <div class="reveal">
+          <h2 class="text-3xl font-bold text-white mb-2">Purpose</h2>
+          <div class="w-12 h-1 bg-brand-500 rounded mb-8"></div>
+
+          <p class="text-slate-400 text-lg mb-8 max-w-3xl">
+            Every developer eventually faces the same pain: a new machine, a fresh VPS, or a WSL2 instance —
+            and hours of manual setup just to feel at home. This project solves that.
+          </p>
+
+          <div class="grid sm:grid-cols-2 gap-4 mb-8">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+              <div class="text-2xl mb-3">🖥️</div>
+              <h3 class="text-white font-semibold mb-2">Identical Environments</h3>
+              <p class="text-slate-400 text-sm">Your Neovim, tmux, shell, and git behave exactly the same on your MacBook, a remote VPS, or inside WSL2. No more "it works on my machine."</p>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+              <div class="text-2xl mb-3">⚡</div>
+              <h3 class="text-white font-semibold mb-2">Zero-to-Productive Fast</h3>
+              <p class="text-slate-400 text-sm">Bootstrap scripts automate every step: package install, Oh My Zsh, plugins, dotfiles clone, symlinks, LSP servers. A VPS is ready in one command.</p>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+              <div class="text-2xl mb-3">📦</div>
+              <h3 class="text-white font-semibold mb-2">Version-Controlled History</h3>
+              <p class="text-slate-400 text-sm">Every config change is a commit. You can see exactly when you changed a tmux keybind, diff your Neovim setup over time, and roll back anything.</p>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+              <div class="text-2xl mb-3">🔀</div>
+              <h3 class="text-white font-semibold mb-2">Platform-Aware</h3>
+              <p class="text-slate-400 text-sm">macOS-only tools (sketchybar, karabiner) never pollute Linux. Shared configs work everywhere or degrade gracefully. The split is enforced by the directory structure.</p>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+              <div class="text-2xl mb-3">🔒</div>
+              <h3 class="text-white font-semibold mb-2">Secrets Stay Secret</h3>
+              <p class="text-slate-400 text-sm">A strict .gitignore blocks .env files, OAuth tokens (gh/hosts.yml), karabiner backups, and all Claude Code runtime data. Public repo-safe by design.</p>
+            </div>
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-5">
+              <div class="text-2xl mb-3">🤖</div>
+              <h3 class="text-white font-semibold mb-2">AI-Integrated Workflow</h3>
+              <p class="text-slate-400 text-sm">The <code class="text-brand-300 bg-slate-800 px-1 rounded text-xs">claude/</code> directory ships a full Claude Code setup: custom agents, slash commands, hooks, and rules — version-controlled alongside your other tools.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ 4. HOW IT WORKS (FULL) ═══ -->
+      <section id="how-full">
+        <div class="reveal">
+          <h2 class="text-3xl font-bold text-white mb-2">How It Works</h2>
+          <div class="w-12 h-1 bg-brand-500 rounded mb-8"></div>
+
+          <p class="text-slate-400 text-lg mb-10 max-w-3xl">
+            The project has two distinct flows depending on whether you're setting up an existing machine
+            or a brand-new one.
+          </p>
+
+          <!-- Two flow paths -->
+          <div class="grid md:grid-cols-2 gap-6 mb-12">
+
+            <!-- Existing machine flow -->
+            <div>
+              <h3 class="text-white font-semibold mb-4 flex items-center gap-2">
+                <span class="text-xs bg-brand-900 text-brand-400 border border-brand-800 rounded px-2 py-0.5 font-mono">Existing machine</span>
+                macOS / manual Linux
+              </h3>
+              <div class="space-y-2">
+                <div class="bg-slate-900 border border-slate-800 rounded-lg px-4 py-3 text-sm">
+                  <span class="text-brand-400 font-mono">1.</span>
+                  <span class="text-slate-300 ml-2">Install prerequisites (Homebrew + tools)</span>
+                </div>
+                <div class="text-center text-brand-600 text-lg">↓</div>
+                <div class="bg-slate-900 border border-slate-800 rounded-lg px-4 py-3 text-sm">
+                  <span class="text-brand-400 font-mono">2.</span>
+                  <span class="text-slate-300 ml-2">Clone the repo to <code class="text-amber-300">~/VSCodeProjects/dotfiles</code></span>
+                </div>
+                <div class="text-center text-brand-600 text-lg">↓</div>
+                <div class="bg-slate-900 border border-brand-800 rounded-lg px-4 py-3 text-sm border-2">
+                  <span class="text-brand-400 font-mono">3.</span>
+                  <span class="text-slate-300 ml-2">Run <code class="text-brand-300">./install.sh --macos</code></span>
+                </div>
+                <div class="text-center text-brand-600 text-lg">↓</div>
+                <div class="bg-slate-900 border border-slate-800 rounded-lg px-4 py-3 text-sm">
+                  <span class="text-brand-400 font-mono">4.</span>
+                  <span class="text-slate-300 ml-2">Symlinks created, done ✓</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- New machine flow -->
+            <div>
+              <h3 class="text-white font-semibold mb-4 flex items-center gap-2">
+                <span class="text-xs bg-amber-900/40 text-amber-400 border border-amber-800/50 rounded px-2 py-0.5 font-mono">New machine</span>
+                VPS / WSL2
+              </h3>
+              <div class="space-y-2">
+                <div class="bg-slate-900 border border-slate-800 rounded-lg px-4 py-3 text-sm">
+                  <span class="text-amber-400 font-mono">1.</span>
+                  <span class="text-slate-300 ml-2">Run bootstrap script (VPS or WSL2)</span>
+                </div>
+                <div class="text-center text-amber-600 text-lg">↓</div>
+                <div class="bg-slate-900 border border-slate-800 rounded-lg px-4 py-3 text-sm">
+                  <span class="text-amber-400 font-mono">2.</span>
+                  <span class="text-slate-300 ml-2">System packages installed automatically</span>
+                </div>
+                <div class="text-center text-amber-600 text-lg">↓</div>
+                <div class="bg-slate-900 border border-slate-800 rounded-lg px-4 py-3 text-sm">
+                  <span class="text-amber-400 font-mono">3.</span>
+                  <span class="text-slate-300 ml-2">Shell, plugins, prompt, history tools set up</span>
+                </div>
+                <div class="text-center text-amber-600 text-lg">↓</div>
+                <div class="bg-slate-900 border border-amber-800/50 rounded-lg px-4 py-3 text-sm border-2">
+                  <span class="text-amber-400 font-mono">4.</span>
+                  <span class="text-slate-300 ml-2">Repo cloned + <code class="text-amber-300">./install.sh --linux</code> run</span>
+                </div>
+                <div class="text-center text-amber-600 text-lg">↓</div>
+                <div class="bg-slate-900 border border-slate-800 rounded-lg px-4 py-3 text-sm">
+                  <span class="text-amber-400 font-mono">5.</span>
+                  <span class="text-slate-300 ml-2">Neovim plugins, LSP, tmux plugins installed</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- install.sh explained -->
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-6 mb-6">
+            <h3 class="text-white font-semibold mb-4">What <code class="text-brand-300 bg-slate-800 px-1.5 py-0.5 rounded">install.sh</code> actually does</h3>
+            <p class="text-slate-400 text-sm mb-4">It's 84 lines of bash that does exactly one thing: create symlinks. Here's the logic:</p>
+            <div class="space-y-3 text-sm">
+              <div class="flex gap-3">
+                <span class="text-brand-400 font-mono shrink-0">mkdir -p</span>
+                <span class="text-slate-400">Creates <code class="text-slate-300">~/.config/{git,npm,gh,btop,lazygit,thefuck}</code> and <code class="text-slate-300">~/.claude/</code> if they don't exist</span>
+              </div>
+              <div class="flex gap-3">
+                <span class="text-brand-400 font-mono shrink-0">ln -sf</span>
+                <span class="text-slate-400">File-level symlinks for single config files (git/config, npmrc, btop.conf…)</span>
+              </div>
+              <div class="flex gap-3">
+                <span class="text-brand-400 font-mono shrink-0">rm + ln -sf</span>
+                <span class="text-slate-400">Directory symlinks: removes old link first, then links entire dirs (, tmux, claude/agents…)</span>
+              </div>
+              <div class="flex gap-3">
+                <span class="text-amber-400 font-mono shrink-0">--macos</span>
+                <span class="text-slate-400">Also links sketchybar and karabiner (macOS-exclusive tools)</span>
+              </div>
+              <div class="flex gap-3">
+                <span class="text-brand-400 font-mono shrink-0">idempotent</span>
+                <span class="text-slate-400">Safe to run multiple times — <code class="text-slate-300">set -e</code> on errors, <code class="text-slate-300">-f</code> flag on ln overwrites old symlinks cleanly</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sync workflow -->
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-6">
+            <h3 class="text-white font-semibold mb-4">Day-to-day sync workflow</h3>
+            <div class="bg-slate-950 rounded-lg p-4 font-mono text-sm overflow-x-auto">
+              <div class="text-slate-500 mb-2"># Edit a config on machine A:</div>
+              <div class="text-slate-300"> ~/.config//init.lua    <span class="text-brand-400"># editing git-tracked file directly</span></div>
+              <div class="text-slate-300 mt-1">cd ~/VSCodeProjects/dotfiles</div>
+              <div class="text-slate-300 mt-1">git add -p &amp;&amp; git commit -m ": tweak autocmd" &amp;&amp; git push</div>
+              <br/>
+              <div class="text-slate-500 mb-2"># Sync to machine B:</div>
+              <div class="text-slate-300">git pull    <span class="text-brand-400"># symlinks already point at the right place — nothing else needed</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ 5. BY PART ═══ -->
+      <section id="by-part">
+        <div class="reveal">
+          <h2 class="text-3xl font-bold text-white mb-2">How It Works — By Part</h2>
+          <div class="w-12 h-1 bg-brand-500 rounded mb-8"></div>
+
+          <!-- Tab buttons -->
+          <div class="flex flex-wrap gap-2 mb-6" id="part-tabs">
+            <button onclick="switchTab('install')"   class="tab-btn active px-4 py-2 rounded-lg text-sm font-mono font-medium transition-all bg-brand-900 text-brand-400 border border-brand-700" data-tab="install">install.sh</button>
+            <button onclick="switchTab('vps')"       class="tab-btn px-4 py-2 rounded-lg text-sm font-mono font-medium transition-all bg-slate-800 text-slate-400 border border-slate-700 hover:border-slate-500" data-tab="vps">bootstrap-vps</button>
+            <button onclick="switchTab('wsl')"       class="tab-btn px-4 py-2 rounded-lg text-sm font-mono font-medium transition-all bg-slate-800 text-slate-400 border border-slate-700 hover:border-slate-500" data-tab="wsl">bootstrap-wsl</button>
+            <button onclick="switchTab('macos')"     class="tab-btn px-4 py-2 rounded-lg text-sm font-mono font-medium transition-all bg-slate-800 text-slate-400 border border-slate-700 hover:border-slate-500" data-tab="macos">macos/</button>
+            <button onclick="switchTab('linux')"     class="tab-btn px-4 py-2 rounded-lg text-sm font-mono font-medium transition-all bg-slate-800 text-slate-400 border border-slate-700 hover:border-slate-500" data-tab="linux">linux/</button>
+            <button onclick="switchTab('shared')"    class="tab-btn px-4 py-2 rounded-lg text-sm font-mono font-medium transition-all bg-slate-800 text-slate-400 border border-slate-700 hover:border-slate-500" data-tab="shared">shared/</button>
+            <button onclick="switchTab('claude')"    class="tab-btn px-4 py-2 rounded-lg text-sm font-mono font-medium transition-all bg-slate-800 text-slate-400 border border-slate-700 hover:border-slate-500" data-tab="claude">claude/</button>
+          </div>
+
+          <!-- Tab: install.sh -->
+          <div id="tab-install" class="tab-content active bg-slate-900 border border-slate-800 rounded-xl p-6">
+            <div class="flex items-start gap-4 mb-5">
+              <div class="text-4xl">⚙️</div>
+              <div>
+                <h3 class="text-white font-bold text-xl">install.sh</h3>
+                <p class="text-slate-400 text-sm">The only script you run on an existing machine. Creates all symlinks.</p>
+              </div>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-4 mb-5">
+              <div class="bg-slate-950 rounded-lg p-4">
+                <div class="text-xs text-slate-500 font-mono uppercase tracking-wider mb-2">Flags</div>
+                <div class="space-y-2 text-sm">
+                  <div><code class="text-brand-300">--macos</code> <span class="text-slate-400 ml-2">macOS config + sketchybar + karabiner</span></div>
+                  <div><code class="text-brand-300">--linux</code> <span class="text-slate-400 ml-2">Linux config only, no macOS-exclusive tools</span></div>
+                </div>
+              </div>
+              <div class="bg-slate-950 rounded-lg p-4">
+                <div class="text-xs text-slate-500 font-mono uppercase tracking-wider mb-2">Properties</div>
+                <div class="space-y-2 text-sm">
+                  <div class="flex gap-2"><span class="text-brand-400">✓</span><span class="text-slate-400">Idempotent — safe to re-run</span></div>
+                  <div class="flex gap-2"><span class="text-brand-400">✓</span><span class="text-slate-400">84 lines, no dependencies</span></div>
+                  <div class="flex gap-2"><span class="text-brand-400">✓</span><span class="text-slate-400">Exits on any error (<code class="text-slate-300">set -e</code>)</span></div>
+                </div>
+              </div>
+            </div>
+            <div class="text-sm text-slate-400 mb-3">What gets symlinked:</div>
+            <div class="grid sm:grid-cols-3 gap-2 text-sm">
+              <div class="bg-slate-950 rounded p-2"><code class="text-brand-300">~/.zshrc</code> <span class="text-slate-500">→ platform zshrc</span></div>
+              <div class="bg-slate-950 rounded p-2"><code class="text-brand-300">~/.zprofile</code> <span class="text-slate-500">→ platform zprofile</span></div>
+              <div class="bg-slate-950 rounded p-2"><code class="text-brand-300">~/.zshenv</code> <span class="text-slate-500">→ shared zshenv</span></div>
+              <div class="bg-slate-950 rounded p-2"><code class="text-brand-300">~/.config/git/config</code> <span class="text-slate-500">file link</span></div>
+              <div class="bg-slate-950 rounded p-2"><code class="text-brand-300">~/.config//</code> <span class="text-slate-500">dir link</span></div>
+              <div class="bg-slate-950 rounded p-2"><code class="text-brand-300">~/.config/tmux/</code> <span class="text-slate-500">dir link</span></div>
+              <div class="bg-slate-950 rounded p-2"><code class="text-brand-300">~/.config/atuin/</code> <span class="text-slate-500">dir link</span></div>
+              <div class="bg-slate-950 rounded p-2"><code class="text-brand-300">~/.config/wezterm/</code> <span class="text-slate-500">dir link</span></div>
+              <div class="bg-slate-950 rounded p-2"><code class="text-brand-300">~/.claude/{agents,skills…}</code> <span class="text-slate-500">dir links</span></div>
+            </div>
+          </div>
+
+          <!-- Tab: bootstrap-vps -->
+          <div id="tab-vps" class="tab-content bg-slate-900 border border-slate-800 rounded-xl p-6">
+            <div class="flex items-start gap-4 mb-5">
+              <div class="text-4xl">🖧</div>
+              <div>
+                <h3 class="text-white font-bold text-xl">bootstrap-vps.sh</h3>
+                <p class="text-slate-400 text-sm">Run from your local machine to set up a bare Arch Linux VPS over SSH in one command.</p>
+              </div>
+            </div>
+            <div class="bg-slate-950 rounded-lg p-4 font-mono text-sm mb-5">
+              <span class="text-slate-500"># Run from YOUR machine (not the VPS):</span><br/>
+              <span class="text-brand-300">./bootstrap-vps.sh</span> <span class="text-amber-300">my-vps-host</span>
+            </div>
+            <div class="space-y-2 text-sm">
+              <div class="flex gap-3 items-start">
+                <span class="text-brand-400 font-mono shrink-0 w-5">1.</span>
+                <div><span class="text-slate-300 font-medium">Builds a remote script locally</span> <span class="text-slate-500">— writes all setup logic into a temp bash script</span></div>
+              </div>
+              <div class="flex gap-3 items-start">
+                <span class="text-brand-400 font-mono shrink-0 w-5">2.</span>
+                <div><span class="text-slate-300 font-medium">SCP's it to the VPS</span> <span class="text-slate-500">— copies script over SSH</span></div>
+              </div>
+              <div class="flex gap-3 items-start">
+                <span class="text-brand-400 font-mono shrink-0 w-5">3.</span>
+                <div><span class="text-slate-300 font-medium">Pacman installs 20+ packages</span> <span class="text-slate-500">neovim, tmux, fzf, zoxide, bat, eza, ripgrep, fd, git-delta, btop, gh, mise, direnv, thefuck…</span></div>
+              </div>
+              <div class="flex gap-3 items-start">
+                <span class="text-brand-400 font-mono shrink-0 w-5">4.</span>
+                <div><span class="text-slate-300 font-medium">Shell setup</span> <span class="text-slate-500">— Oh My Zsh (unattended) + zsh-autosuggestions + zsh-syntax-highlighting + zsh-completions</span></div>
+              </div>
+              <div class="flex gap-3 items-start">
+                <span class="text-brand-400 font-mono shrink-0 w-5">5.</span>
+                <div><span class="text-slate-300 font-medium">Dev tools</span> <span class="text-slate-500">— Starship prompt, Atuin history, Mise version manager, TPM (Tmux Plugin Manager)</span></div>
+              </div>
+              <div class="flex gap-3 items-start">
+                <span class="text-brand-400 font-mono shrink-0 w-5">6.</span>
+                <div><span class="text-slate-300 font-medium">Clones dotfiles repo + runs install.sh --linux</span></div>
+              </div>
+              <div class="flex gap-3 items-start">
+                <span class="text-brand-400 font-mono shrink-0 w-5">7.</span>
+                <div><span class="text-slate-300 font-medium">Creates ~/.zshrc.local</span> <span class="text-slate-500">— VPS-specific Docker/Nginx aliases</span></div>
+              </div>
+              <div class="flex gap-3 items-start">
+                <span class="text-brand-400 font-mono shrink-0 w-5">8.</span>
+                <div><span class="text-slate-300 font-medium">Installs Neovim plugins, Mason LSP servers, tmux plugins</span> <span class="text-slate-500">headlessly</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab: bootstrap-wsl -->
+          <div id="tab-wsl" class="tab-content bg-slate-900 border border-slate-800 rounded-xl p-6">
+            <div class="flex items-start gap-4 mb-5">
+              <div class="text-4xl">🪟</div>
+              <div>
+                <h3 class="text-white font-bold text-xl">bootstrap-wsl.sh</h3>
+                <p class="text-slate-400 text-sm">Run inside a fresh WSL2 instance (Ubuntu or Debian). 274-line fully automated setup.</p>
+              </div>
+            </div>
+            <div class="bg-slate-950 rounded-lg p-4 font-mono text-sm mb-5">
+              <span class="text-slate-500"># Run INSIDE the WSL2 instance:</span><br/>
+              <span class="text-brand-300">./bootstrap-wsl.sh</span>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-4 mb-4">
+              <div>
+                <div class="text-xs text-slate-500 uppercase tracking-wider mb-2 font-mono">Via apt</div>
+                <div class="space-y-1 text-sm text-slate-400">
+                  <div>zsh, git, curl, wget, build-essential</div>
+                  <div>tmux, fzf, bat (batcat), ripgrep</div>
+                  <div>fd-find, ncdu, direnv</div>
+                  <div>python3, nodejs, npm</div>
+                </div>
+              </div>
+              <div>
+                <div class="text-xs text-slate-500 uppercase tracking-wider mb-2 font-mono">Compiled/Downloaded</div>
+                <div class="space-y-1 text-sm text-slate-400">
+                  <div>Neovim (latest stable from GitHub)</div>
+                  <div>eza, lazygit, git-delta (GitHub releases)</div>
+                  <div>GitHub CLI (official repo)</div>
+                  <div>thefuck (pip3), zoxide</div>
+                </div>
+              </div>
+            </div>
+            <div class="bg-amber-950/30 border border-amber-800/40 rounded-lg p-4 text-sm">
+              <div class="text-amber-400 font-semibold mb-1">WSL2-specific extras</div>
+              <div class="text-slate-400">Installs <code class="text-slate-300">win32yank</code> as a clipboard bridge between WSL2 and Windows. Creates pbcopy/pbpaste aliases and a <code class="text-slate-300">winhome</code> alias pointing to your Windows home directory.</div>
+            </div>
+          </div>
+
+          <!-- Tab: macos/ -->
+          <div id="tab-macos" class="tab-content bg-slate-900 border border-slate-800 rounded-xl p-6">
+            <div class="flex items-start gap-4 mb-5">
+              <div class="text-4xl">🍎</div>
+              <div>
+                <h3 class="text-white font-bold text-xl">macos/</h3>
+                <p class="text-slate-400 text-sm">macOS-exclusive configs. Activated with <code class="text-brand-300">./install.sh --macos</code>.</p>
+              </div>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div class="bg-slate-950 rounded-lg p-4">
+                <div class="text-xs text-slate-500 uppercase tracking-wider mb-3 font-mono">Shared with Linux</div>
+                <div class="space-y-2 text-sm">
+                  <div class="flex gap-2"><span class="text-brand-400">›</span><div><span class="text-slate-300">zshrc / zprofile</span> <span class="text-slate-500">— shell config</span></div></div>
+                  <div class="flex gap-2"><span class="text-brand-400">›</span><div><span class="text-slate-300">ghostty/config</span> <span class="text-slate-500">— terminal emulator</span></div></div>
+                  <div class="flex gap-2"><span class="text-brand-400">›</span><div><span class="text-slate-300">git/config</span> <span class="text-slate-500">— includes delta pager</span></div></div>
+                  <div class="flex gap-2"><span class="text-brand-400">›</span><div><span class="text-slate-300">npm/npmrc</span> <span class="text-slate-500">— Node settings</span></div></div>
+                  <div class="flex gap-2"><span class="text-brand-400">›</span><div><span class="text-slate-300">tmux/</span> <span class="text-slate-500">— monochrome theme + plugins</span></div></div>
+                </div>
+              </div>
+              <div class="bg-slate-950 rounded-lg p-4 border border-brand-900">
+                <div class="text-xs text-brand-600 uppercase tracking-wider mb-3 font-mono">macOS only</div>
+                <div class="space-y-2 text-sm">
+                  <div class="flex gap-2"><span class="text-amber-400">›</span><div><span class="text-slate-300">sketchybar/</span> <span class="text-slate-500">— custom macOS status bar with 10 plugins (battery, CPU, wifi, volume, clock, spaces, front app, keyboard, services, aerospace)</span></div></div>
+                  <div class="flex gap-2 mt-3"><span class="text-amber-400">›</span><div><span class="text-slate-300">karabiner/</span> <span class="text-slate-500">— keyboard remapping (karabiner.json)</span></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab: linux/ -->
+          <div id="tab-linux" class="tab-content bg-slate-900 border border-slate-800 rounded-xl p-6">
+            <div class="flex items-start gap-4 mb-5">
+              <div class="text-4xl">🐧</div>
+              <div>
+                <h3 class="text-white font-bold text-xl">linux/</h3>
+                <p class="text-slate-400 text-sm">Linux configs — used by both Arch VPS and WSL2 setups.</p>
+              </div>
+            </div>
+            <p class="text-slate-400 text-sm mb-4">Same structure as <code class="text-brand-300">macos/</code> but without macOS-exclusive tools:</p>
+            <div class="space-y-2 text-sm mb-5">
+              <div class="flex gap-2"><span class="text-brand-400">✓</span><span class="text-slate-400">zshrc / zprofile — Linux-adapted shell config</span></div>
+              <div class="flex gap-2"><span class="text-brand-400">✓</span><span class="text-slate-400">ghostty/config — same terminal, different path conventions</span></div>
+              <div class="flex gap-2"><span class="text-brand-400">✓</span><span class="text-slate-400">git/config — same settings, Linux-compatible</span></div>
+              <div class="flex gap-2"><span class="text-brand-400">✓</span><span class="text-slate-400">npm/npmrc — same Node settings</span></div>
+              <div class="flex gap-2"><span class="text-brand-400">✓</span><span class="text-slate-400">tmux/ — identical monochrome config</span></div>
+              <div class="flex gap-2"><span class="text-red-400">✗</span><span class="text-slate-500">No sketchybar — macOS only</span></div>
+              <div class="flex gap-2"><span class="text-red-400">✗</span><span class="text-slate-500">No karabiner — macOS only</span></div>
+            </div>
+            <div class="bg-slate-950 rounded-lg p-4 text-sm text-slate-400">
+              Machine-specific config goes into <code class="text-slate-300">~/.zshrc.local</code> (gitignored) — the bootstrap scripts create this file with host-specific aliases like Docker shortcuts on the VPS or WSL2/Windows helpers.
+            </div>
+          </div>
+
+          <!-- Tab: shared/ -->
+          <div id="tab-shared" class="tab-content bg-slate-900 border border-slate-800 rounded-xl p-6">
+            <div class="flex items-start gap-4 mb-5">
+              <div class="text-4xl">🌐</div>
+              <div>
+                <h3 class="text-white font-bold text-xl">shared/</h3>
+                <p class="text-slate-400 text-sm">Cross-platform configs. Every tool here works on macOS, Arch, and WSL2.</p>
+              </div>
+            </div>
+
+            <!-- Accordion items -->
+            <div class="space-y-2">
+              <div class="accordion border border-slate-700 rounded-lg overflow-hidden">
+                <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between px-4 py-3 text-left text-sm font-medium text-slate-300 hover:bg-slate-800 transition-colors">
+                  <span>⌨️ Neovim — <code class="text-brand-300 text-xs">shared/config//</code></span>
+                  <span class="accordion-icon text-brand-400 text-xs">▼</span>
+                </button>
+                <div class="accordion-body bg-slate-950 px-4 py-3 text-sm text-slate-400 space-y-2">
+                  <p>The most substantial piece of the repo. A full Lua-based Neovim config with <strong class="text-slate-300">25+ plugins</strong> managed by lazy..</p>
+                  <div class="grid sm:grid-cols-2 gap-3 mt-3">
+                    <div><div class="text-xs text-slate-500 uppercase mb-1">Core</div>LSP (blink.cmp), Treesitter, Mason (LSP installer), Conform (formatting)</div>
+                    <div><div class="text-xs text-slate-500 uppercase mb-1">UI</div>Everforest theme, Bufferline, Noice (cmdline/notify), Devicons, Snacks</div>
+                    <div><div class="text-xs text-slate-500 uppercase mb-1">Navigation</div>Flash (motions), Telescope-style (Snacks picker), Which-key</div>
+                    <div><div class="text-xs text-slate-500 uppercase mb-1">Editing</div>Mini.ai, Surround, Autopairs, Move, Splitjoin, Operators, Grug-far (find/replace)</div>
+                  </div>
+                  <div class="mt-2">Language-specific overrides in <code class="text-slate-300">after/ftplugin/</code> for: Go, Rust, Python, TypeScript/React, JavaScript/React, C, JSON</div>
+                </div>
+              </div>
+
+              <div class="accordion border border-slate-700 rounded-lg overflow-hidden">
+                <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between px-4 py-3 text-left text-sm font-medium text-slate-300 hover:bg-slate-800 transition-colors">
+                  <span>🚀 Shell Enhancement Tools</span>
+                  <span class="accordion-icon text-brand-400 text-xs">▼</span>
+                </button>
+                <div class="accordion-body bg-slate-950 px-4 py-3 text-sm text-slate-400 space-y-1">
+                  <div class="flex gap-3"><code class="text-brand-300 w-24 shrink-0">starship</code><span>Blazing-fast cross-shell prompt</span></div>
+                  <div class="flex gap-3"><code class="text-brand-300 w-24 shrink-0">atuin</code><span>Shell history with sync, search, and timestamps</span></div>
+                  <div class="flex gap-3"><code class="text-brand-300 w-24 shrink-0">zoxide</code><span>Smart cd — jumps to frequently visited dirs</span></div>
+                  <div class="flex gap-3"><code class="text-brand-300 w-24 shrink-0">fzf</code><span>Fuzzy finder — piped into many workflows</span></div>
+                  <div class="flex gap-3"><code class="text-brand-300 w-24 shrink-0">thefuck</code><span>Corrects previous mistyped commands</span></div>
+                  <div class="flex gap-3"><code class="text-brand-300 w-24 shrink-0">direnv</code><span>Auto-loads .env files per directory</span></div>
+                </div>
+              </div>
+
+              <div class="accordion border border-slate-700 rounded-lg overflow-hidden">
+                <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between px-4 py-3 text-left text-sm font-medium text-slate-300 hover:bg-slate-800 transition-colors">
+                  <span>🛠 CLI Replacements &amp; Utilities</span>
+                  <span class="accordion-icon text-brand-400 text-xs">▼</span>
+                </button>
+                <div class="accordion-body bg-slate-950 px-4 py-3 text-sm text-slate-400 space-y-1">
+                  <div class="flex gap-3"><code class="text-brand-300 w-24 shrink-0">bat</code><span>cat with syntax highlighting and git integration</span></div>
+                  <div class="flex gap-3"><code class="text-brand-300 w-24 shrink-0">eza</code><span>ls with icons, git status, tree view</span></div>
+                  <div class="flex gap-3"><code class="text-brand-300 w-24 shrink-0">ripgrep</code><span>Faster grep with sane defaults</span></div>
+                  <div class="flex gap-3"><code class="text-brand-300 w-24 shrink-0">fd</code><span>Faster find with better syntax</span></div>
+                  <div class="flex gap-3"><code class="text-brand-300 w-24 shrink-0">btop</code><span>Beautiful system resource monitor</span></div>
+                  <div class="flex gap-3"><code class="text-brand-300 w-24 shrink-0">ncdu</code><span>Interactive disk usage analyser</span></div>
+                </div>
+              </div>
+
+              <div class="accordion border border-slate-700 rounded-lg overflow-hidden">
+                <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between px-4 py-3 text-left text-sm font-medium text-slate-300 hover:bg-slate-800 transition-colors">
+                  <span>🌿 Git Tooling</span>
+                  <span class="accordion-icon text-brand-400 text-xs">▼</span>
+                </button>
+                <div class="accordion-body bg-slate-950 px-4 py-3 text-sm text-slate-400 space-y-1">
+                  <div class="flex gap-3"><code class="text-brand-300 w-24 shrink-0">lazygit</code><span>Terminal git UI — stage hunks, view diff, manage branches</span></div>
+                  <div class="flex gap-3"><code class="text-brand-300 w-24 shrink-0">delta</code><span>Syntax-highlighted diff pager, integrated into git config</span></div>
+                  <div class="flex gap-3"><code class="text-brand-300 w-24 shrink-0">gh</code><span>GitHub CLI — PRs, issues, releases from the terminal</span></div>
+                </div>
+              </div>
+
+              <div class="accordion border border-slate-700 rounded-lg overflow-hidden">
+                <button onclick="toggleAccordion(this)" class="w-full flex items-center justify-between px-4 py-3 text-left text-sm font-medium text-slate-300 hover:bg-slate-800 transition-colors">
+                  <span>🖥 WezTerm — <code class="text-brand-300 text-xs">shared/config/wezterm/</code></span>
+                  <span class="accordion-icon text-brand-400 text-xs">▼</span>
+                </button>
+                <div class="accordion-body bg-slate-950 px-4 py-3 text-sm text-slate-400">
+                  GPU-accelerated terminal emulator configured via Lua. Shared between platforms as a secondary terminal option (Ghostty is the primary). Config lives in <code class="text-slate-300">wezterm.lua</code>.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tab: claude/ -->
+          <div id="tab-claude" class="tab-content bg-slate-900 border border-slate-800 rounded-xl p-6">
+            <div class="flex items-start gap-4 mb-5">
+              <div class="text-4xl">🤖</div>
+              <div>
+                <h3 class="text-white font-bold text-xl">claude/</h3>
+                <p class="text-slate-400 text-sm">Full Claude Code configuration — version-controlled and symlinked to <code class="text-brand-300">~/.claude/</code>.</p>
+              </div>
+            </div>
+            <div class="grid sm:grid-cols-2 gap-4 mb-5">
+              <div class="bg-slate-950 rounded-lg p-4">
+                <div class="text-xs text-slate-500 uppercase tracking-wider mb-3 font-mono">agents/</div>
+                <div class="space-y-1 text-sm text-slate-400">
+                  <div>claude-md-maintainer — keeps CLAUDE.md up to date</div>
+                  <div>code-reviewer — audits diffs for issues</div>
+                  <div>debugger — systematic bug investigation</div>
+                  <div>meta-agent — creates new agents</div>
+                  <div>meta-skill — creates new skills</div>
+                  <div>researcher — deep technical research</div>
+                </div>
+              </div>
+              <div class="bg-slate-950 rounded-lg p-4">
+                <div class="text-xs text-slate-500 uppercase tracking-wider mb-3 font-mono">commands/ (slash commands)</div>
+                <div class="space-y-1 text-sm text-slate-400">
+                  <div><code class="text-brand-300">/user:commit</code> — stage, review, commit</div>
+                  <div><code class="text-brand-300">/user:review</code> — audit for secrets/issues</div>
+                  <div><code class="text-brand-300">/user:sync</code> — run install.sh + verify</div>
+                  <div><code class="text-brand-300">/user:scaffold</code> — init .claude/ in new projects</div>
+                </div>
+              </div>
+              <div class="bg-slate-950 rounded-lg p-4">
+                <div class="text-xs text-slate-500 uppercase tracking-wider mb-3 font-mono">hooks/ (Python)</div>
+                <div class="space-y-1 text-sm text-slate-400">
+                  <div>pre_tool_use / post_tool_use</div>
+                  <div>session_start / stop / subagent_stop</div>
+                  <div>user_prompt_submit / waiting_for_input</div>
+                  <div>notification / pre_compact</div>
+                  <div>TTS via ElevenLabs / OpenAI / pyttsx3</div>
+                </div>
+              </div>
+              <div class="bg-slate-950 rounded-lg p-4">
+                <div class="text-xs text-slate-500 uppercase tracking-wider mb-3 font-mono">rules/ + skills/</div>
+                <div class="space-y-1 text-sm text-slate-400">
+                  <div>rules: claude-md-standards, conventions, security</div>
+                  <div>skills: flashcards, init-project, review</div>
+                  <div>docs: agent-teams-guide</div>
+                </div>
+              </div>
+            </div>
+            <div class="bg-amber-950/30 border border-amber-800/40 rounded-lg p-4 text-sm">
+              <span class="text-amber-400 font-semibold">Note:</span>
+              <span class="text-slate-400 ml-1">Claude Code runtime data (sessions, cache, logs, todos, history) is gitignored. Only the configuration and automation scripts are version-controlled.</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ═══ 6. VERDICT ═══ -->
+      <section id="verdict">
+        <div class="reveal">
+          <h2 class="text-3xl font-bold text-white mb-2">Should You Use It?</h2>
+          <div class="w-12 h-1 bg-brand-500 rounded mb-8"></div>
+
+          <div class="grid md:grid-cols-2 gap-6">
+
+            <!-- Reasons to use -->
+            <div class="bg-slate-900 border border-brand-900 rounded-xl p-6">
+              <div class="flex items-center gap-2 mb-5">
+                <div class="w-8 h-8 rounded-full bg-brand-900 flex items-center justify-center text-brand-400 text-lg">✓</div>
+                <h3 class="text-brand-400 font-bold text-lg">You should use it if…</h3>
+              </div>
+              <div class="space-y-4 text-sm">
+                <div class="flex gap-3">
+                  <span class="text-brand-500 mt-0.5 shrink-0">●</span>
+                  <div><span class="text-slate-200 font-medium">You work across multiple machines.</span> <span class="text-slate-400">MacBook for dev, VPS for deployments, WSL2 at work? One repo, one command, identical environments.</span></div>
+                </div>
+                <div class="flex gap-3">
+                  <span class="text-brand-500 mt-0.5 shrink-0">●</span>
+                  <div><span class="text-slate-200 font-medium">You want to version-control your config.</span> <span class="text-slate-400">See exactly when you changed a keybind. Roll back a broken Neovim config. Diff your shell setup over 2 years.</span></div>
+                </div>
+                <div class="flex gap-3">
+                  <span class="text-brand-500 mt-0.5 shrink-0">●</span>
+                  <div><span class="text-slate-200 font-medium">You spin up new machines regularly.</span> <span class="text-slate-400">A fresh Arch VPS or WSL2 instance goes from bare to fully configured in under 10 minutes, fully unattended.</span></div>
+                </div>
+                <div class="flex gap-3">
+                  <span class="text-brand-500 mt-0.5 shrink-0">●</span>
+                  <div><span class="text-slate-200 font-medium">You use (or want to use) Neovim heavily.</span> <span class="text-slate-400">The  config alone is worth stealing — full LSP, 25+ plugins, language-specific ftplugins, all in organized Lua.</span></div>
+                </div>
+                <div class="flex gap-3">
+                  <span class="text-brand-500 mt-0.5 shrink-0">●</span>
+                  <div><span class="text-slate-200 font-medium">You use Claude Code.</span> <span class="text-slate-400">The claude/ directory ships a production-ready setup: custom agents, slash commands, hooks with TTS, security rules.</span></div>
+                </div>
+                <div class="flex gap-3">
+                  <span class="text-brand-500 mt-0.5 shrink-0">●</span>
+                  <div><span class="text-slate-200 font-medium">You want a curated modern toolchain.</span> <span class="text-slate-400">Every tool was chosen deliberately: bat over cat, eza over ls, ripgrep over grep, lazygit over CLI git, delta for diffs.</span></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Reasons not to use -->
+            <div class="bg-slate-900 border border-red-900/50 rounded-xl p-6">
+              <div class="flex items-center gap-2 mb-5">
+                <div class="w-8 h-8 rounded-full bg-red-900/40 flex items-center justify-center text-red-400 text-lg">✗</div>
+                <h3 class="text-red-400 font-bold text-lg">You shouldn't use it if…</h3>
+              </div>
+              <div class="space-y-4 text-sm">
+                <div class="flex gap-3">
+                  <span class="text-red-500/70 mt-0.5 shrink-0">●</span>
+                  <div><span class="text-slate-200 font-medium">You're a zsh/bash beginner.</span> <span class="text-slate-400">The bootstrap scripts run with root-level side effects on your machine. Understanding what they do before running them is essential.</span></div>
+                </div>
+                <div class="flex gap-3">
+                  <span class="text-red-500/70 mt-0.5 shrink-0">●</span>
+                  <div><span class="text-slate-200 font-medium">You want a GUI-first setup.</span> <span class="text-slate-400">Everything here is terminal-centric. VS Code with a GUI is not part of this setup. This is built around Neovim, tmux, and the CLI.</span></div>
+                </div>
+                <div class="flex gap-3">
+                  <span class="text-red-500/70 mt-0.5 shrink-0">●</span>
+                  <div><span class="text-slate-200 font-medium">You don't use macOS, Arch, or Ubuntu/Debian.</span> <span class="text-slate-400">Bootstrap scripts use pacman and apt. Other distros (Fedora, openSUSE) would need modification.</span></div>
+                </div>
+                <div class="flex gap-3">
+                  <span class="text-red-500/70 mt-0.5 shrink-0">●</span>
+                  <div><span class="text-slate-200 font-medium">You have different tool preferences.</span> <span class="text-slate-400">This is an opinionated setup. If you prefer fish over zsh, Helix over Neovim, or Starship alternatives — you'll spend more time adapting than it's worth.</span></div>
+                </div>
+                <div class="flex gap-3">
+                  <span class="text-red-500/70 mt-0.5 shrink-0">●</span>
+                  <div><span class="text-slate-200 font-medium">You don't have SSH access to a different GitHub host.</span> <span class="text-slate-400">bootstrap-vps.sh clones from <code class="text-slate-300">git@github-mourey:…</code> (a custom SSH host alias). You'd need to update this to your own repo URL.</span></div>
+                </div>
+                <div class="flex gap-3">
+                  <span class="text-red-500/70 mt-0.5 shrink-0">●</span>
+                  <div><span class="text-slate-200 font-medium">You're looking for a "plug and play" community solution.</span> <span class="text-slate-400">This is a personal repo with personal opinions. It's better used as inspiration or a starting point than run verbatim on your machine.</span></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Honest verdict -->
+          <div class="mt-6 bg-slate-900 border border-slate-800 rounded-xl p-6">
+            <h3 class="text-white font-semibold mb-3">Honest verdict</h3>
+            <p class="text-slate-400 text-sm leading-6 max-w-3xl">
+              This is a <strong class="text-slate-200">well-structured personal dotfiles repo</strong> that solves real problems. The symlink approach is solid, the platform separation is clean, and the bootstrap scripts are thorough. Even if you don't use it directly,
+              it's excellent reference material for building your own. The Claude Code integration in particular is unusually complete — most dotfiles repos don't treat AI tooling as a first-class citizen.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ 7. QUICK START ═══ -->
+      <section id="quickstart">
+        <div class="reveal">
+          <h2 class="text-3xl font-bold text-white mb-2">Quick Start</h2>
+          <div class="w-12 h-1 bg-brand-500 rounded mb-8"></div>
+
+          <!-- Platform tabs -->
+          <div class="flex gap-2 mb-6">
+            <button onclick="switchQS('macos')"  class="qs-btn active px-4 py-2 rounded-lg text-sm font-mono font-medium bg-brand-900 text-brand-400 border border-brand-700 transition-all">macOS</button>
+            <button onclick="switchQS('vps')"    class="qs-btn px-4 py-2 rounded-lg text-sm font-mono font-medium bg-slate-800 text-slate-400 border border-slate-700 hover:border-slate-500 transition-all">Arch VPS</button>
+            <button onclick="switchQS('wsl2')"   class="qs-btn px-4 py-2 rounded-lg text-sm font-mono font-medium bg-slate-800 text-slate-400 border border-slate-700 hover:border-slate-500 transition-all">WSL2</button>
+          </div>
+
+          <!-- macOS -->
+          <div id="qs-macos" class="qs-content active">
+            <div class="space-y-3">
+              <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+                <div class="flex items-center justify-between px-4 py-2 border-b border-slate-800 bg-slate-950">
+                  <span class="text-xs font-mono text-slate-500">1. Install prerequisites</span>
+                  <button onclick="copyCode(this)" class="text-xs text-slate-500 hover:text-brand-400 transition-colors px-2 py-1 rounded hover:bg-slate-800">copy</button>
+                </div>
+                <pre class="p-4 text-sm font-mono text-slate-300 overflow-x-auto"><code># Install Homebrew
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+# Install tools
+brew install neovim tmux fzf zoxide bat eza ripgrep fd git-delta btop lazygit gh atuin mise direnv thefuck starship
+brew install --cask ghostty wezterm</code></pre>
+              </div>
+
+              <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+                <div class="flex items-center justify-between px-4 py-2 border-b border-slate-800 bg-slate-950">
+                  <span class="text-xs font-mono text-slate-500">2. Clone &amp; install</span>
+                  <button onclick="copyCode(this)" class="text-xs text-slate-500 hover:text-brand-400 transition-colors px-2 py-1 rounded hover:bg-slate-800">copy</button>
+                </div>
+                <pre class="p-4 text-sm font-mono text-slate-300 overflow-x-auto"><code>git clone https://github.com/Mourey/dotfiles ~/VSCodeProjects/dotfiles
+cd ~/VSCodeProjects/dotfiles
+./install.sh --macos</code></pre>
+              </div>
+            </div>
+          </div>
+
+          <!-- VPS -->
+          <div id="qs-vps" class="qs-content hidden">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+              <div class="flex items-center justify-between px-4 py-2 border-b border-slate-800 bg-slate-950">
+                <span class="text-xs font-mono text-slate-500">Run from your local machine</span>
+                <button onclick="copyCode(this)" class="text-xs text-slate-500 hover:text-brand-400 transition-colors px-2 py-1 rounded hover:bg-slate-800">copy</button>
+              </div>
+              <pre class="p-4 text-sm font-mono text-slate-300 overflow-x-auto"><code># Clone dotfiles locally first
+git clone https://github.com/Mourey/dotfiles ~/VSCodeProjects/dotfiles
+cd ~/VSCodeProjects/dotfiles
+
+# Bootstrap a bare Arch Linux VPS (replace 'my-vps' with your SSH host)
+./bootstrap-vps.sh my-vps</code></pre>
+            </div>
+            <p class="text-slate-500 text-xs mt-3 font-mono">Requires: SSH access configured. Script SCPs itself to the VPS and runs remotely.</p>
+          </div>
+
+          <!-- WSL2 -->
+          <div id="qs-wsl2" class="qs-content hidden">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+              <div class="flex items-center justify-between px-4 py-2 border-b border-slate-800 bg-slate-950">
+                <span class="text-xs font-mono text-slate-500">Run inside the WSL2 instance</span>
+                <button onclick="copyCode(this)" class="text-xs text-slate-500 hover:text-brand-400 transition-colors px-2 py-1 rounded hover:bg-slate-800">copy</button>
+              </div>
+              <pre class="p-4 text-sm font-mono text-slate-300 overflow-x-auto"><code># Clone dotfiles
+git clone https://github.com/Mourey/dotfiles ~/VSCodeProjects/dotfiles
+cd ~/VSCodeProjects/dotfiles
+
+# Run the WSL2 bootstrap (Ubuntu/Debian)
+./bootstrap-wsl.sh</code></pre>
+            </div>
+            <p class="text-slate-500 text-xs mt-3 font-mono">Installs all packages, sets up zsh, Oh My Zsh, tools, win32yank, and runs install.sh --linux automatically.</p>
+          </div>
+
+          <!-- Sync after updates -->
+          <div class="mt-6 bg-slate-900 border border-slate-800 rounded-xl overflow-hidden">
+            <div class="flex items-center justify-between px-4 py-2 border-b border-slate-800 bg-slate-950">
+              <span class="text-xs font-mono text-slate-500">Keeping configs in sync (any platform)</span>
+              <button onclick="copyCode(this)" class="text-xs text-slate-500 hover:text-brand-400 transition-colors px-2 py-1 rounded hover:bg-slate-800">copy</button>
+            </div>
+            <pre class="p-4 text-sm font-mono text-slate-300 overflow-x-auto"><code>cd ~/VSCodeProjects/dotfiles
+git pull          # Fetch latest changes
+./install.sh --macos   # Re-run if symlink targets changed (idempotent)</code></pre>
+          </div>
+
+          <!-- Personal overrides -->
+          <div class="mt-6 bg-slate-900 border border-slate-800 rounded-xl p-5">
+            <h3 class="text-white font-semibold text-sm mb-3">Gitignored personal overrides</h3>
+            <div class="grid sm:grid-cols-2 gap-3 text-sm">
+              <div class="flex gap-2"><code class="text-amber-300 text-xs shrink-0">~/.zshrc.local</code><span class="text-slate-500">machine-specific aliases/paths</span></div>
+              <div class="flex gap-2"><code class="text-amber-300 text-xs shrink-0">CLAUDE.local.md</code><span class="text-slate-500">personal Claude preferences</span></div>
+              <div class="flex gap-2"><code class="text-amber-300 text-xs shrink-0">.claude/settings.local.json</code><span class="text-slate-500">permission overrides</span></div>
+              <div class="flex gap-2"><code class="text-amber-300 text-xs shrink-0">~/.claude/.env</code><span class="text-slate-500">API keys (TTS, etc.)</span></div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ── FOOTER ── -->
+  <footer class="border-t border-slate-800 mt-24">
+    <div class="max-w-7xl mx-auto px-4 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <span class="font-mono text-slate-600 text-sm">~/dotfiles — symlink-based multi-platform config</span>
+      <div class="flex gap-6 text-sm text-slate-600">
+        <span>macOS</span><span>·</span><span>Arch Linux</span><span>·</span><span>WSL2</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ── Tab switcher (By Part section) ──
+    function switchTab(name) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'))
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-brand-900', 'text-brand-400', 'border-brand-700')
+        btn.classList.add('bg-slate-800', 'text-slate-400', 'border-slate-700')
+      })
+      document.getElementById('tab-' + name).classList.add('active')
+      const activeBtn = document.querySelector(`[data-tab="${name}"]`)
+      activeBtn.classList.add('bg-brand-900', 'text-brand-400', 'border-brand-700')
+      activeBtn.classList.remove('bg-slate-800', 'text-slate-400', 'border-slate-700')
+    }
+
+    // ── Quick Start platform switcher ──
+    function switchQS(name) {
+      document.querySelectorAll('.qs-content').forEach(el => {
+        el.classList.add('hidden')
+        el.classList.remove('active')
+      })
+      document.querySelectorAll('.qs-btn').forEach(btn => {
+        btn.classList.remove('bg-brand-900', 'text-brand-400', 'border-brand-700')
+        btn.classList.add('bg-slate-800', 'text-slate-400', 'border-slate-700')
+      })
+      const target = document.getElementById('qs-' + name)
+      target.classList.remove('hidden')
+      target.classList.add('active')
+      const btns = document.querySelectorAll('.qs-btn')
+      btns.forEach(btn => {
+        if (btn.textContent.trim().toLowerCase().replace(' ', '') === name ||
+            (name === 'macos' && btn.textContent.includes('macOS')) ||
+            (name === 'vps' && btn.textContent.includes('Arch')) ||
+            (name === 'wsl2' && btn.textContent.includes('WSL2'))) {
+          btn.classList.add('bg-brand-900', 'text-brand-400', 'border-brand-700')
+          btn.classList.remove('bg-slate-800', 'text-slate-400', 'border-slate-700')
+        }
+      })
+    }
+
+    // ── Accordion ──
+    function toggleAccordion(btn) {
+      const body = btn.nextElementSibling
+      const icon = btn.querySelector('.accordion-icon')
+      const isOpen = body.classList.contains('open')
+      body.classList.toggle('open', !isOpen)
+      icon.textContent = isOpen ? '▼' : '▲'
+    }
+
+    // ── Copy code button ──
+    function copyCode(btn) {
+      const code = btn.closest('.rounded-xl').querySelector('code')
+      navigator.clipboard.writeText(code.textContent).then(() => {
+        const original = btn.textContent
+        btn.textContent = 'copied!'
+        btn.classList.add('text-brand-400')
+        setTimeout(() => { btn.textContent = original; btn.classList.remove('text-brand-400') }, 1500)
+      })
+    }
+
+    // ── Scroll reveal ──
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible') })
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' })
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el))
+
+    // ── Active TOC highlight ──
+    const sections = document.querySelectorAll('section[id]')
+    const tocLinks = document.querySelectorAll('.toc-link')
+    const tocObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          tocLinks.forEach(l => l.classList.remove('active'))
+          const active = document.querySelector(`.toc-link[href="#${e.target.id}"]`)
+          if (active) active.classList.add('active')
+        }
+      })
+    }, { rootMargin: '-20% 0px -70% 0px' })
+    sections.forEach(s => tocObserver.observe(s))
+  </script>
+</body>
+</html>
