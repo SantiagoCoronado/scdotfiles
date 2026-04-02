@@ -47,8 +47,6 @@ fi
 
 # Shared configs
 ln -sf "$SHARED_DIR/config/starship.toml" "$CONFIG_DIR/starship.toml"
-rm -rf "$CONFIG_DIR/"
-ln -sf "$SHARED_DIR/config/" "$CONFIG_DIR/"
 rm -rf "$CONFIG_DIR/atuin"
 ln -sf "$SHARED_DIR/config/atuin" "$CONFIG_DIR/atuin"
 

@@ -141,6 +141,7 @@ def main():
         # Parse command line arguments
         parser = argparse.ArgumentParser()
         parser.add_argument("--chat", action="store_true", help="Copy transcript to chat.json")
+        parser.add_argument("--chain", action="store_true", help="Reserved for orchestrator chaining (no-op)")
         args = parser.parse_args()
 
         # Read JSON input from stdin

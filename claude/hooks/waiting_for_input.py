@@ -12,6 +12,7 @@ import os
 import random
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 try:
@@ -181,6 +182,7 @@ def main():
 
         # Announce waiting for input if enabled and not in log-only mode
         if args.enable and not args.log_only:
+            time.sleep(10)
             announce_waiting_for_input()
 
         sys.exit(0)
