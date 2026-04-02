@@ -2,6 +2,16 @@
 
 Personal development environment for macOS and Arch Linux. One command creates symlinks from this repo to your home directory — your configs stay in git, your system stays in sync.
 
+## Quick Start
+
+```bash
+git clone git@github.com:SantiagoCoronado/scdotfiles.git ~/scdotfiles
+cd ~/scdotfiles
+./bootstrap.sh
+```
+
+`bootstrap.sh` installs Homebrew, all dependencies from the `Brewfile`, Oh My Zsh, and symlinks every config in one shot. See [Install](#install) below for manual step-by-step instructions.
+
 ## Install
 
 ### macOS (existing machine)
@@ -34,8 +44,8 @@ curl -fsSL https://claude.ai/install.sh | bash
 **2. Clone and install:**
 
 ```bash
-git clone git@github.com:Mourey/dotfiles.git ~/dotfiles
-cd ~/dotfiles
+git clone git@github.com:SantiagoCoronado/scdotfiles.git ~/scdotfiles
+cd ~/scdotfiles
 ./install.sh --macos
 source ~/.zshrc
 ```
@@ -55,8 +65,8 @@ source ~/.zshrc
 Run inside your WSL2 instance — installs everything from scratch:
 
 ```bash
-git clone git@github.com:Mourey/dotfiles.git ~/dotfiles
-cd ~/dotfiles
+git clone git@github.com:SantiagoCoronado/scdotfiles.git ~/scdotfiles
+cd ~/scdotfiles
 ./bootstrap-wsl.sh
 ```
 

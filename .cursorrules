@@ -1,0 +1,55 @@
+# Cursor Rules — scdotfiles
+# Translated from claude/rules/ — keep in sync when updating those files.
+
+## Security
+
+- NEVER commit API keys, tokens, passwords, or credentials of any kind.
+- NEVER commit `.env` files or any file matching `.env.*`.
+- NEVER commit `gh/hosts.yml` (contains OAuth tokens).
+- NEVER commit `karabiner/automatic_backups/` or `karabiner/assets/`.
+- NEVER commit Claude runtime data (sessions, telemetry, cache, history logs).
+- Raycast config contains API tokens and must never be tracked.
+- Before suggesting a commit, check `git diff --cached` for accidental secrets.
+- When in doubt about a file containing secrets, add it to `.gitignore` first.
+- Do NOT pipe `curl` output directly to `bash` in shell scripts unless it is a well-known, pinned installer (e.g. Homebrew, Oh My Zsh). Prefer downloading first and inspecting.
+- Do NOT use `rm -rf` on paths that could match user home directories or broad globs.
+
+## Code Style
+
+- Be direct and specific. Say "use `rg` for search" not "use a fast search tool".
+- No speculative abstractions. Build only what the task requires — no helpers for hypothetical future use.
+- No trailing summaries. Don't restate what you just did.
+- Prefer editing existing files over creating new ones.
+- Comments only where the logic is non-obvious. Don't narrate obvious code.
+- Shell scripts must be idempotent — running them twice should produce no errors and no duplicate side effects.
+- Always quote variables in shell: `"$VAR"` not `$VAR`.
+- Use `set -euo pipefail` at the top of every bash script.
+
+## Dotfiles Conventions
+
+- macOS-only configs belong in `macos/config/` (ghostty, git, npm, tmux, sketchybar, karabiner).
+- Linux-only configs belong in `linux/config/` (same structure as macos/).
+- Cross-platform configs belong in `shared/config/` (atuin, starship, btop, gh, lazygit, thefuck, wezterm).
+- Claude Code config lives in `claude/` at the repo root (symlinked to `~/.claude/`).
+- Use **directory symlinks** (`rm -rf` + `ln -sf`) when tracking an entire directory (tmux, ghostty, atuin, wezterm, sketchybar, karabiner).
+- Use **file symlinks** (`ln -sf` into a pre-created target dir) when the target dir contains generated content you don't want to track (git/config, btop/btop.conf, gh/config.yml).
+- Always update `install.sh` when adding a new config to the repo.
+- Shell config: `zoxide init` MUST appear at the end of `.zshrc`, after `compinit`.
+- Platform differences to watch: `status-position` (bottom on macOS, top on Linux), clipboard (`pbcopy` vs `xclip`).
+- Local overrides go in `.zshrc.local` — never tracked.
+
+## CLAUDE.md / Documentation Standards
+
+- Keep `CLAUDE.md` files under 200 lines. Longer files reduce instruction adherence.
+- Include: build/test/lint/deploy commands, architectural decisions, non-obvious gotchas, import conventions.
+- Exclude: linter rules, full documentation, dependency lists, generic advice ("write clean code").
+- Be specific: "use `zod` for validation" not "validate inputs".
+- Gotchas should explain WHY: "tests hit a real DB — run `db:reset` first" not just "reset the DB".
+- `CLAUDE.local.md` is for personal overrides only — keep under 20 lines, never duplicate `CLAUDE.md`.
+
+## AI Context
+
+- When generating or suggesting shell scripts, verify they work on both macOS (zsh/bash, BSD tools) and Linux (bash, GNU tools) unless explicitly platform-specific.
+- When editing configs, preserve the existing comment style and blank-line groupings.
+- Do not suggest adding new top-level directories without discussing the change — the repo structure is intentional.
+- Do not suggest migrating from the custom `install.sh` to `stow` — the current symlink approach is deliberate and handles cases stow cannot (directory vs file symlink distinctions, generated-content directories).
