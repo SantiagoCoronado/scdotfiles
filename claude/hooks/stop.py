@@ -142,6 +142,7 @@ def main():
         parser = argparse.ArgumentParser()
         parser.add_argument("--chat", action="store_true", help="Copy transcript to chat.json")
         parser.add_argument("--chain", action="store_true", help="Reserved for orchestrator chaining (no-op)")
+        parser.add_argument("--no-tts", action="store_true", help="Disable TTS completion announcement")
         args = parser.parse_args()
 
         # Read JSON input from stdin
@@ -193,7 +194,8 @@ def main():
                     pass  # Fail silently
 
         # Announce completion via TTS
-        announce_completion()
+        if not args.no_tts:
+            announce_completion()
 
         sys.exit(0)
 
